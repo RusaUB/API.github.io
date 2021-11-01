@@ -1,9 +1,7 @@
-const PORT = 8000
-const express = require('express')
 const axios = require('axios')
 const cheerio = require('cheerio')
-const { response } = require('express')
-const { contains } = require('cheerio/lib/static')
+const express = require('express')
+const PORT = process.env.PORT || 3000
 
 const app = express()
 const articles = []
@@ -48,7 +46,13 @@ app.get('/news', (req,res) => {
     res.json(articles)
 })
 
-app.get('/news/:newspaperId', async (req,res) => {
+const dotenv = require('dotenv')
+dotenv.config()
+
+//
+console.log(process.env.DBHOST)
+
+app.get('/news/:newspaperId', (req,res) => {
     const newspaperId = req.params.newspaperId
     const newspaperAdress = newspapers.filter(newspaper => newspaper.name == newspaperId)[0].address
     
@@ -69,4 +73,8 @@ app.get('/news/:newspaperId', async (req,res) => {
         }) 
         res.json(scpecificArticles)
     }).catch(err => console.log(err))
+})
+
+app.listen(PORT, () => {
+    console.log('running')
 })
